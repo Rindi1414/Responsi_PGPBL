@@ -15,7 +15,7 @@ Aplikasi Spacial Style Shop dibuat dengan tujuan untuk memberikan pengalaman bel
 1. Foto Katalog Baju diambil dari Google
 
 ### Link Project
-[https://github.com/Rindi1414/Responsi_PGPBL]
+[https://github.com/Rindi1414/Responsi_PGPBL/tree/master]
 
 ### Tangkapan Layar
 ![Landing Page](./src/assets/homepage.png)
