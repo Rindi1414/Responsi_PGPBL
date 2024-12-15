@@ -1,0 +1,32 @@
+[
+  {
+      "name": "Toko ABC",
+      "latitude": -7.774796,
+      "longitude": 110.374430,
+      "address": "Jl. Malioboro No. 1, Yogyakarta",
+      "open": "08:00",
+      "close": "22:00",
+      "rating": 4.5,
+      "contact": "+62 812-3456-7890"
+  },
+  {
+      "name": "Toko XYZ",
+      "latitude": -7.770500,
+      "longitude": 110.378900,
+      "address": "Jl. Solo No. 15, Yogyakarta",
+      "open": "09:00",
+      "close": "21:00",
+      "rating": 4.0,
+      "contact": "+62 821-9876-5432"
+  },
+  {
+      "name": "Toko 123",
+      "latitude": -7.769000,
+      "longitude": 110.377000,
+      "address": "Jl. Sudirman No. 10, Yogyakarta",
+      "open": "10:00",
+      "close": "20:00",
+      "rating": 3.8,
+      "contact": "+62 856-1234-5678"
+  }
+]

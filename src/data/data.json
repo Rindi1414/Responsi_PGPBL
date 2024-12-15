@@ -1,0 +1,40 @@
+{
+    "products": [
+        {
+            "id": 1,
+            "image": "https://ae01.alicdn.com/kf/S6344537db04a434e83f360e4c4e95d98j.jpg_960x960.jpg",
+            "title": "Map It Out",
+            "price": 49.999
+        },
+        {
+            "id": 2,
+            "image": "https://images.tokopedia.net/img/cache/700/hDjmkQ/2024/5/25/0fac03d0-7c05-4a78-824d-b2d1ab259ec6.jpg",
+            "title": "Contour Craze",
+            "price": 39.999
+        },
+        {
+            "id": 3,
+            "image": "https://images.tokopedia.net/img/cache/700/hDjmkQ/2024/5/25/3b4ce8a4-b670-44e3-b782-32f9bed08c7f.jpg",
+            "title": "Geo-Junkie",
+            "price": 29.999
+        },
+        {
+            "id": 4,
+            "image": "https://ae01.alicdn.com/kf/S34954071c70b4dc29b2e61ec4cecf423j.jpg_960x960.jpg",
+            "title": "Latitude Attitude",
+            "price": 99.999
+        },
+        {
+            "id": 5,
+            "image": "https://img.lazcdn.com/g/p/2897536452d96ca78a57f44cca56d135.jpg_720x720q80.jpg",
+            "title": "Gridlocked",
+            "price": 59.999
+        },
+        {
+            "id": 6,
+            "image": "https://ciptaloka-mockups.s3.amazonaws.com/design/xaz93rgaz8-444-0-1--l.jpg",
+            "title": "Topo Tango",
+            "price": 149.999
+        }
+    ]
+}

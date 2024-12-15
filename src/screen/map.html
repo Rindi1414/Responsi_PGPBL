@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temukan Special Style Shop Favoritmu</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px;
+            color: #007B9A;
+        }
+        /* Menambahkan gaya CSS untuk teks yang terpusat */
+        .centered-text {
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007B9A;
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        button {
+            background-color: #007B9A;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #005f6b;
+        }
+        #form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 25px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            border-radius: 10px;
+            width: 90%; /* Menggunakan lebar relatif */
+            max-width: 400px; /* Lebar maksimum */
+            max-height: 90vh; /* Batas tinggi maksimal */
+            overflow-y: auto; /* Tambahkan scroll jika melebihi layar */
+            box-sizing: border-box;
+        }
+        #form-popup h3 {
+            color: #007B9A;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #007B9A;
+        }
+        .form-actions {
+            text-align: center;
+        }
+        .form-actions button {
+            width: 100%;
+        }
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <h1>Temukan Special Style Shop Favoritmu</h1>
+    <!-- Tambahkan tulisan rindi yang terpusat -->
+    <div class="centered-text">
+        rindi
+    </div>
+    <div id="map"></div>
+    <div class="form-actions">
+        <button id="add-btn">Tambah Titik Baru</button>
+        <button id="refresh-btn">Muat Ulang Data</button>
+    </div>
+
+    <!-- Form Popup -->
+    <div id="form-popup">
+        <h3>Tambah Titik Baru</h3>
+        <form id="data-form">
+            <div class="form-group">
+                <label for="name">Nama Toko:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="contact">Kontak Person:</label>
+                <input type="text" id="contact" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Alamat:</label>
+                <input type="text" id="address" required>
+            </div>
+            <div class="form-group">
+                <label for="latitude">Latitude:</label>
+                <input type="text" id="latitude" required>
+            </div>
+            <div class="form-group">
+                <label for="longitude">Longitude:</label>
+                <input type="text" id="longitude" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit">Tambah Data</button>
+                <button type="button" id="cancel-btn" style="background-color: #ccc;">Batal</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Popup Overlay -->
+    <div class="popup-overlay" id="popup-overlay"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([-7.797068, 110.370529], 13); // Yogyakarta
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var addBtn = document.getElementById('add-btn');
+        var cancelBtn = document.getElementById('cancel-btn');
+        var formPopup = document.getElementById('form-popup');
+        var dataForm = document.getElementById('data-form');
+        var overlay = document.getElementById('popup-overlay');
+
+        // Tampilkan form
+        addBtn.addEventListener('click', function () {
+            formPopup.style.display = 'block';
+            overlay.style.display = 'block';
+        });
+
+        // Tutup form
+        cancelBtn.addEventListener('click', function () {
+            formPopup.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        // Data statis toko contoh
+        var tokoData = [
+            {
+                "name": "Toko A",
+                "contact": "(206) 555-0174",
+                "address": "6501 132nd Ave NE, Kirkland, WA 98033",
+                "latitude": -7.7956,
+                "longitude": 110.3695
+            },
+            {
+                "name": "Toko B",
+                "contact": "(123) 456-7890",
+                "address": "Jl. Malioboro No.10, Yogyakarta",
+                "latitude": -7.7921,
+                "longitude": 110.3656
+            }
+        ];
+
+        // Tambahkan marker dari data toko
+        function loadMarkers(data) {
+            data.forEach(item => {
+                var marker = L.marker([item.latitude, item.longitude]).addTo(map);
+                marker.bindPopup(`
+                    <div style="font-family: Arial, sans-serif; width: 250px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); border-radius: 10px;">
+                        <div style="background-color: #007B9A; color: white; padding: 10px; border-top-left-radius: 10px; border-top-right-radius: 10px; font-size: 1.1em; font-weight: bold;">
+                            ${item.name}
+                        </div>
+                        <div style="padding: 10px; line-height: 1.5;">
+                            <span style="font-weight: bold;">Alamat:</span><br>
+                            ${item.address}<br>
+                            <span style="font-weight: bold;">Kontak:</span> <a href="tel:${item.contact}" style="color: #007B9A; text-decoration: none;">${item.contact}</a>
+                        </div>
+                    </div>
+                `);
+            });
+        }
+
+        loadMarkers(tokoData);
+
+        // Menambahkan data baru
+        dataForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var name = document.getElementById('name').value;
+            var contact = document.getElementById('contact').value;
+            var address = document.getElementById('address').value;
+            var latitude = parseFloat(document.getElementById('latitude').value);
+            var longitude = parseFloat(document.getElementById('longitude').value);
+
+            var newMarker = L.marker([latitude, longitude]).addTo(map);
+            newMarker.bindPopup(`
+                <div style="font-family: Arial, sans-serif; width: 250px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); border-radius: 10px;">
+                    <div style="background-color: #007B9A; color: white; padding: 10px; border-top-left-radius: 10px; border-top-right-radius: 10px; font-size: 1.1em; font-weight: bold;">
+                        ${name}
+                    </div>
+                    <div style="padding: 10px; line-height: 1.5;">
+                        <span style="font-weight: bold;">Alamat:</span><br>
+                        ${address}<br>
+                        <span style="font-weight: bold;">Kontak:</span> <a href="tel:${contact}" style="color: #007B9A; text-decoration: none;">${contact}</a>
+                    </div>
+                </div>
+            `);
+
+            formPopup.style.display = 'none';
+            overlay.style.display = 'none';
+            dataForm.reset();
+            alert('Data berhasil ditambahkan!');
+        });
+    </script>
+</body>
+</html>
